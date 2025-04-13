@@ -3,10 +3,11 @@ Small Chrome Extension that provides a GUI to recolor Squadrats.com Tiles on BRo
 
 <table>
   <tr>
-    <td width="60%">
-      <img src="https://github.com/user-attachments/assets/1619bf1d-dece-4f55-a0e4-251879bf2cd4"/>
+    <td width="45%">
+      <img src="https://github.com/user-attachments/assets/121df889-b792-440a-a55d-a4a8a08225a3"/>
+      <!-- <img src="https://github.com/user-attachments/assets/1619bf1d-dece-4f55-a0e4-251879bf2cd4"/> -->
     </td>
-    <td width="40%">
+    <td width="55%">
       <img src="https://github.com/user-attachments/assets/10c8a59f-7023-4203-9871-0d068c6e97f6"/>
       <br/>
       <img src="https://github.com/user-attachments/assets/8eeab066-ee2d-4edb-a779-cee8dd9fb368"/>
