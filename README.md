@@ -29,7 +29,7 @@ Not intented to harm anyone, just a quick workaround to add custom coloring to t
 
 - First I copied the original Squadrats.com Extension Files into a custom folder and removed the key in the manifest.json, deactivated the original extension, and imported the unpacked version, so the Extension does not self update and sits in a known location
 - Reasoning behind this: The normal installed version can change its path by itself), and Chrome uses some very obscure folder names / paths for maintaining the extensions installed via the chrome web store
-- - I did this via Chrome in Developer Mode - Manage Extensions - Import Unpacked
+- I did this via Chrome in Developer Mode - Manage Extensions - Import Unpacked
 - ![image](https://github.com/user-attachments/assets/4462b532-613a-423b-af3e-df74564a2b59)
 - I added this code to the end of the squadratsStyles.js in the original Squadrats Extension:
 
