@@ -70,4 +70,5 @@ function mergeDeep(target, source) {
 - Doing color changes
 - Toggling the custom styling
 - Importing your styling from a file.
+- Resetting the custom color styling
 
