@@ -21,7 +21,7 @@ Small Chrome Extension that provides a GUI to recolor Squadrats.com Tiles on BRo
 |-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 -->
 
-This was a quick weekend hack using a lot of AI assisted coded - use on your own risk.
+This was a quick weekend hack using a lot of AI assisted coding - use at your own risk.
 Not intented to harm anyone, just a quick workaround to add custom coloring to the Squadrats Chrome Extension since this is something I found lacking.
 
 ## Installation - How I set it up
