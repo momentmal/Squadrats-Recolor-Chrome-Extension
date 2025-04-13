@@ -66,5 +66,5 @@ function mergeDeep(target, source) {
 ## Usage
 
 - Should be self-explaining.
-- Note, that you need to refresh the page each time you want to see the color changes.
+- Note, that you need to refresh the page each time you want to see the color changes or if you toggle the custom styling, or import your styling from a file.
 
