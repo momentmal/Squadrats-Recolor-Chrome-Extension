@@ -26,7 +26,7 @@ Not intented to harm anyone, just a quick workaround to add custom coloring to t
 
 ## Installation - How I set it up
 
-- First I copied the original Squadrats.com Extension Files into a custom folder and removed the key in the manifest.json, deactivated the original extension, and imported the unpacked version, so the Extension does not self update and sits in a know location (the normal installed version can change its path by itself)
+- First I copied the original Squadrats.com Extension Files into a custom folder and removed the key in the manifest.json, deactivated the original extension, and imported the unpacked version, so the Extension does not self update and sits in a known location (the normal installed version can change its path by itself)
 - I did this via Chrome in Developer Mode - Manage Extensions - Import Unpacked
 - ![image](https://github.com/user-attachments/assets/4462b532-613a-423b-af3e-df74564a2b59)
 - I added this code to the end of the squadratsStyles.js in the original Squadrats Extension:
