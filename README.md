@@ -29,6 +29,38 @@ Not intented to harm anyone, just a quick workaround to add custom coloring to t
 - First copied the original Squadrats.com Extension Files into a custom folder and removed the fingerprint in the manifest.json, deactivated the original extension, and imported the unpacked version, so the Extension does not self update and sits in a know location (the normal installed version can change its path by itself)
 - Do this via Chrome in Developer Mode - Manage Extensions - Import Unpacked
 - ![image](https://github.com/user-attachments/assets/4462b532-613a-423b-af3e-df74564a2b59)
+- I added this code to the end of the squadratsStyles.js in the original Squadrats Extension:
+
+<pre>
+function mergeDeep(target, source) {
+    for (const key in source) {
+      if (source[key] instanceof Object && key in target) {
+        mergeDeep(target[key], source[key]);
+      } else {
+        target[key] = source[key];
+      }
+    }
+  }
+  
+  try {
+    const enable = localStorage.getItem("enableSquadratsOverrides") === "true";
+    if (enable) {
+      const overrides = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
+      if (overrides["leaflet-styling"]) {
+        mergeDeep(squadratsStyles["leaflet-styling"], overrides["leaflet-styling"]);
+        console.log("✅ Applied leaflet-styling overrides from localStorage");
+      }
+    } else {
+      console.log("ℹ️ Squadrats overrides disabled via toggle");
+    }
+  } catch (e) {
+    console.warn("⚠️ Failed to apply style overrides:", e);
+  }
+  
+  window.squadratsStyles = squadratsStyles;
+</pre>
+
+
 - Then I imported my unpacked extension
 
 ## Usage
