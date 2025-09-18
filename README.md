@@ -36,31 +36,35 @@ Not intented to harm anyone, just a quick workaround to add custom coloring to t
 
 <pre>
 function mergeDeep(target, source) {
-    for (const key in source) {
-      if (source[key] instanceof Object && key in target) {
-        mergeDeep(target[key], source[key]);
-      } else {
-        target[key] = source[key];
-      }
-    }
-  }
-  
-  try {
-    const enable = localStorage.getItem("enableSquadratsOverrides") === "true";
-    if (enable) {
-      const overrides = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
-      if (overrides["leaflet-styling"]) {
-        mergeDeep(squadratsStyles["leaflet-styling"], overrides["leaflet-styling"]);
-        console.log("✅ Applied leaflet-styling overrides from localStorage");
-      }
+  for (const key in source) {
+    if (source[key] instanceof Object && key in target) {
+      mergeDeep(target[key], source[key]);
     } else {
-      console.log("ℹ️ Squadrats overrides disabled via toggle");
+      target[key] = source[key];
     }
-  } catch (e) {
-    console.warn("⚠️ Failed to apply style overrides:", e);
   }
-  
-  window.squadratsStyles = squadratsStyles;
+}
+
+try {
+  const enable = localStorage.getItem("enableSquadratsOverrides") === "true";
+  if (enable) {
+    const overrides = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
+    const enabledTypes = JSON.parse(localStorage.getItem("enabledSquadratsTypes") || "[]");
+
+    enabledTypes.forEach(type => {
+      if (overrides[type] && squadratsStyles[type]) {
+        mergeDeep(squadratsStyles[type], overrides[type]);
+        console.log("🎨 Applied overrides for", type);
+      }
+    });
+  } else {
+    console.log("🎨 Squadrats overrides disabled via toggle");
+  }
+} catch (e) {
+  console.warn("⚠️ Failed to apply style overrides:", e);
+}
+
+window.squadratsStyles = squadratsStyles;
 </pre>
 
 

@@ -42,9 +42,28 @@
       width: 28px;
       text-align: right;
     }
+    #styleToggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px; /* vertical / horizontal spacing */
+      margin-bottom: 10px;
+    }
+
+    #styleToggles label {
+      width: 45%; /* two per line */
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
   </style>
 </head>
-<body>
+  <body>
+    <div id="styleToggles">
+      <label><input type="checkbox" id="enableLeaflet"> Leaflet (BRouter-Web)</label>
+      <label><input type="checkbox" id="enableMapboxVector"> Mapbox Vector (Komoot)</label>
+      <label><input type="checkbox" id="enableMapboxRaster"> Mapbox Raster</label>
+      <label><input type="checkbox" id="enableMapboxSatellite"> Mapbox Satellite</label>
+    </div>
   <button id="resetColors">Reset Custom Coloring</button>
   <label>
     <input type="checkbox" id="enableOverride" />
