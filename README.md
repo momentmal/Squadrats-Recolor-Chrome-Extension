@@ -52,11 +52,35 @@ try {
     const enabledTypes = JSON.parse(localStorage.getItem("enabledSquadratsTypes") || "[]");
 
     enabledTypes.forEach(type => {
-      if (overrides[type] && squadratsStyles[type]) {
-        mergeDeep(squadratsStyles[type], overrides[type]);
-        console.log("🎨 Applied overrides for", type);
-      }
-    });
+        if (overrides[type] && squadratsStyles[type]) {
+            const fixed = {};
+            for (const layer in overrides[type]) {
+            fixed[layer] = {};
+            for (const prop in overrides[type][layer]) {
+                let val = overrides[type][layer][prop];
+
+                if (prop.includes("color")) {
+                // ✅ Always apply custom color
+                val = String(val);
+                fixed[layer][prop] = val;
+                } else if (prop.includes("opacity")) {
+                if (type.startsWith("mapbox-")) {
+                    // 🚫 Skip overriding opacity for Mapbox styles → keep interpolate scaffolding
+                    continue;
+                } else {
+                    // ✅ Apply opacity overrides for Leaflet
+                    fixed[layer][prop] = parseFloat(val);
+                }
+                } else {
+                fixed[layer][prop] = val;
+                }
+            }
+            }
+            mergeDeep(squadratsStyles[type], fixed);
+            console.log("🎨 Applied overrides for", type);
+        }
+        });
+
   } else {
     console.log("🎨 Squadrats overrides disabled via toggle");
   }
