@@ -5,27 +5,16 @@ Small Chrome Extension that provides a GUI to recolor Squadrats.com Tiles on BRo
   <tr>
     <td width="45%">
       <img width="388" height="633" alt="image" src="https://github.com/user-attachments/assets/9c3011a8-5119-4818-bd01-c9d4542b0325" />
-      <!--<img src="https://github.com/user-attachments/assets/121df889-b792-440a-a55d-a4a8a08225a3"/>-->
-      <!-- <img src="https://github.com/user-attachments/assets/1619bf1d-dece-4f55-a0e4-251879bf2cd4"/> -->
     </td>
     <td width="55%">
       <img width="446" height="357" alt="image" src="https://github.com/user-attachments/assets/95ef8588-9545-4f57-abe3-d4317b965e53" />
-      <!-- <img src="https://github.com/user-attachments/assets/10c8a59f-7023-4203-9871-0d068c6e97f6"/> -->
       <br/>
       <img width="446" height="357" alt="image" src="https://github.com/user-attachments/assets/6f63bbd4-c253-4fcf-965b-98a84605a02e" />
-      <!-- <img src="https://github.com/user-attachments/assets/8eeab066-ee2d-4edb-a779-cee8dd9fb368"/> -->
     </td>
   </tr>
 </table>
 
-
-
-<!--
-| ![image](https://github.com/user-attachments/assets/1619bf1d-dece-4f55-a0e4-251879bf2cd4) | ![image](https://github.com/user-attachments/assets/10c8a59f-7023-4203-9871-0d068c6e97f6) ![image](https://github.com/user-attachments/assets/8eeab066-ee2d-4edb-a779-cee8dd9fb368) |
-|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
--->
-
-This was a quick weekend hack using a lot of AI assisted coding - use at your own risk.
+This is based on a quick weekend hack using a lot of AI assisted coding - use at your own risk.
 Not intented to harm anyone, just a quick workaround to add custom coloring to the Squadrats Chrome Extension for BRouter-Web (Leaflet) since this is something I found lacking. 
 Now also supporting Komoot (Mapbox Vector Style).
 
@@ -110,9 +99,9 @@ function mergeDeep(target, source) {
   window.squadratsStyles = squadratsStyles;
 </pre>
 
-
-- Then I imported my unpacked extension, so the Extension does not self update and sits in a known location
-- I imported the copied Extension in Chrome via "Manage Extensions" (Developer Mode) - Import Unpacked
+- Then I imported my unpacked extension, so the Extension does not self update and sits in a known location (in Chrome via "Manage Extensions" (Developer Mode) - Import Unpacked)
+- Ensure your copied version of the Squadrats Extension still works for you
+- Then add the recolor extension provided in this repository in the same way
 
 ## Usage
 
