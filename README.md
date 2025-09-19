@@ -31,11 +31,10 @@ Now also supporting Komoot (Mapbox Vector Style).
 
 ## Installation - How I set it up
 
-- First I copied the original Squadrats.com Extension Files into a custom folder and removed the key in the manifest.json (so it is not confused with the original Extension), deactivated the original extension temporarily for my experiment, and imported the unpacked version, so the Extension does not self update and sits in a known location
+- First I copied the original Squadrats.com Extension Files into a custom folder and removed the key in the manifest.json (so it is not confused with the original Extension), deactivated the original extension temporarily for my experiment
+- ![image](https://github.com/user-attachments/assets/4462b532-613a-423b-af3e-df74564a2b59)
 - Reasoning behind this: The normal installed version can change its path by itself, and Chrome uses some very obscure folder names / paths for maintaining the extensions installed via the chrome web store
 - Downside: To update the Squadrats.com extension, you have to occasionally deactivate the manual copy, reactivate the chrome web store version, and transfer the files after the extension has updated. There might be a more elegant way to let the 2 extensions work together.
-- I imported the copied Extension in Chrome via "Manage Extensions" (Developer Mode) - Import Unpacked
-- ![image](https://github.com/user-attachments/assets/4462b532-613a-423b-af3e-df74564a2b59)
 - I added this code to the end of the squadratsStyles.js in the copy of the original Squadrats.com Extension:
 
 <pre>
@@ -112,7 +111,8 @@ function mergeDeep(target, source) {
 </pre>
 
 
-- Then I imported my unpacked extension
+- Then I imported my unpacked extension, so the Extension does not self update and sits in a known location
+- I imported the copied Extension in Chrome via "Manage Extensions" (Developer Mode) - Import Unpacked
 
 ## Usage
 
