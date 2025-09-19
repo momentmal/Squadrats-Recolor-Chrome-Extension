@@ -23,7 +23,8 @@ Small Chrome Extension that provides a GUI to recolor Squadrats.com Tiles on BRo
 -->
 
 This was a quick weekend hack using a lot of AI assisted coding - use at your own risk.
-Not intented to harm anyone, just a quick workaround to add custom coloring to the Squadrats Chrome Extension for BRouter-Web (Leaflet) since this is something I found lacking.
+Not intented to harm anyone, just a quick workaround to add custom coloring to the Squadrats Chrome Extension for BRouter-Web (Leaflet) since this is something I found lacking. 
+Now also supporting Komoot (Mapbox Vector Style).
 
 ## Installation - How I set it up
 
