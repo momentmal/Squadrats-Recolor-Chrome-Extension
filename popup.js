@@ -119,12 +119,12 @@ document.addEventListener("DOMContentLoaded", async () => {
           // apply into ALL enabled style groups
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
-            func: (o, enabledTypes) => {
+            func: (o) => {
               const full = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
-              enabledTypes.forEach(type => { full[type] = o; });
+              full["universal"] = o;
               localStorage.setItem("customSquadratsStyles", JSON.stringify(full));
             },
-            args: [overridesForGUI, enabledTypes]
+            args: [overridesForGUI]
           });
         };
 
@@ -181,10 +181,7 @@ document.getElementById("resetColors").onclick = () => {
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: () => {
-          const full = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
-          const types = JSON.parse(localStorage.getItem("enabledSquadratsTypes") || "[]");
-          types.forEach(t => delete full[t]);
-          localStorage.setItem("customSquadratsStyles", JSON.stringify(full));
+          localStorage.removeItem("customSquadratsStyles");
           alert("🎨 Custom coloring cleared. Please reload the page.");
         }
       });
@@ -197,7 +194,17 @@ document.getElementById("export").onclick = () => {
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      func: () => localStorage.getItem("customSquadratsStyles")
+      func: () => {
+        const full = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
+        const out = {};
+        const merge = (src) => {
+          if (!src) return;
+          for (const layer in src) out[layer] = Object.assign({}, out[layer], src[layer]);
+        };
+        ["universal","leaflet-styling","mapbox-vector-styling","mapbox-raster-styling","mapbox-satellite-styling"]
+          .forEach(k => merge(full[k]));
+        return JSON.stringify(out);
+      }
     }, ([res]) => {
       const blob = new Blob([res.result || "{}"], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -225,8 +232,31 @@ document.getElementById("fileInput").onchange = (e) => {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: (data) => {
-            localStorage.setItem("customSquadratsStyles", JSON.stringify(data));
-            alert("✅ Custom styles imported. Reload the page to apply.");
+            try {
+              const full = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
+
+              // normalize accepted formats → flat object
+              let flat = data;
+              if (data && typeof data === "object") {
+                if (data.universal) flat = data.universal;
+                else if (data["leaflet-styling"] || data["mapbox-vector-styling"] || data["mapbox-raster-styling"] || data["mapbox-satellite-styling"]) {
+                  flat = {};
+                  ["leaflet-styling","mapbox-vector-styling","mapbox-raster-styling","mapbox-satellite-styling"].forEach(k => {
+                    const src = data[k];
+                    if (src) for (const layer in src) flat[layer] = Object.assign({}, flat[layer], src[layer]);
+                  });
+                }
+              }
+
+              const TYPES = ["leaflet-styling","mapbox-vector-styling","mapbox-raster-styling","mapbox-satellite-styling"];
+              TYPES.forEach(t => { full[t] = flat; });
+              full.universal = flat; // kept for future exports
+
+              localStorage.setItem("customSquadratsStyles", JSON.stringify(full));
+              alert("✅ Custom styles imported. Reload the page to apply.");
+            } catch (e) {
+              alert("⚠️ Invalid JSON file.");
+            }
           },
           args: [json]
         });
