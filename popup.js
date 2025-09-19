@@ -195,15 +195,63 @@ document.getElementById("export").onclick = () => {
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => {
-        const full = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
-        const out = {};
+        // 1) collect stored overrides from all buckets → flat
+        const stored = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
+        const buckets = ["universal","leaflet-styling","mapbox-vector-styling","mapbox-raster-styling","mapbox-satellite-styling"];
+        const flat = {};
         const merge = (src) => {
           if (!src) return;
-          for (const layer in src) out[layer] = Object.assign({}, out[layer], src[layer]);
+          for (const layer in src) flat[layer] = Object.assign({}, flat[layer], src[layer]);
         };
-        ["universal","leaflet-styling","mapbox-vector-styling","mapbox-raster-styling","mapbox-satellite-styling"]
-          .forEach(k => merge(full[k]));
-        return JSON.stringify(out);
+        buckets.forEach(k => merge(stored[k]));
+
+        // 2) fill missing props from the effective live styles on the page
+        const editable = {
+          "squadrats-paint": ["fill-color","fill-opacity"],
+          "squadratinhos-paint": ["fill-color","fill-opacity"],
+          "squadyard-paint": ["fill-color","fill-opacity"],
+          "squadyardinho-paint": ["fill-color","fill-opacity"],
+          "ubersquadrat-paint": ["line-color","line-width","line-opacity"],
+          "ubersquadratinho-paint": ["line-color","line-width","line-opacity"],
+          "new-squadrats-paint": ["fill-color","fill-opacity"],
+          "new-squadratinhos-paint": ["fill-color","fill-opacity"],
+          "squadrats-outline-paint": ["line-color","line-width","line-opacity"],
+          "squadratinhos-outline-paint": ["line-color","line-width","line-opacity"],
+          "grid-paint": ["line-color","line-width","line-opacity"],
+          "gridinho-paint": ["line-color","line-width","line-opacity"]
+        };
+
+        const effective = (window.squadrats && window.squadrats.styles)
+          || (window.squadratsStyles && (window.squadratsStyles[(window.squadrats && window.squadrats.colors) || "mapbox-vector-styling"]))
+          || {};
+
+        const pickOpacity = (v) => {
+          if (typeof v === "number") return v;
+          if (Array.isArray(v)) {
+            const nums = v.filter(x => typeof x === "number");
+            return nums.length ? nums[nums.length - 1] : undefined;
+          }
+          if (typeof v === "string") {
+            const m = v.match(/-?\d+(\.\d+)?/g);
+            return m ? parseFloat(m[m.length - 1]) : undefined;
+          }
+          return undefined;
+        };
+
+        for (const layer in editable) {
+          const props = editable[layer];
+          props.forEach(prop => {
+            if (!flat[layer] || flat[layer][prop] === undefined) {
+              const live = effective[layer]?.[prop];
+              if (live !== undefined) {
+                if (!flat[layer]) flat[layer] = {};
+                flat[layer][prop] = prop.includes("opacity") ? pickOpacity(live) : String(live);
+              }
+            }
+          });
+        }
+
+        return JSON.stringify(flat);
       }
     }, ([res]) => {
       const blob = new Blob([res.result || "{}"], { type: "application/json" });
