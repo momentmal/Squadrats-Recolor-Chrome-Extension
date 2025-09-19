@@ -1,16 +1,16 @@
 const editableStyles = {
   "squadrats-paint": ["fill-color", "fill-opacity"],
   "squadratinhos-paint": ["fill-color", "fill-opacity"],
-  "squadyard-paint": ["fill-color", "fill-opacity", "opacity"],
-  "squadyardinho-paint": ["fill-color", "fill-opacity", "opacity"],
-  "ubersquadrat-paint": ["line-color", "line-width"],
-  "ubersquadratinho-paint": ["line-color", "line-width"],
-  "new-squadrats-paint": ["fill-color", "fill-opacity", "opacity"],
-  "new-squadratinhos-paint": ["fill-color", "fill-opacity", "opacity"],
-  "squadrats-outline-paint": ["line-color", "line-width"],
-  "squadratinhos-outline-paint": ["line-color", "line-opacity", "line-width"],
-  "grid-paint": ["line-color", "line-opacity", "line-width"],
-  "gridinho-paint": ["line-color", "line-opacity", "line-width"]
+  "squadyard-paint": ["fill-color", "fill-opacity"],
+  "squadyardinho-paint": ["fill-color", "fill-opacity"],
+  "ubersquadrat-paint": ["line-color", "line-width", "line-opacity"],
+  "ubersquadratinho-paint": ["line-color", "line-width", "line-opacity"],
+  "new-squadrats-paint": ["fill-color", "fill-opacity"],
+  "new-squadratinhos-paint": ["fill-color", "fill-opacity"],
+  "squadrats-outline-paint": ["line-color", "line-width", "line-opacity"],
+  "squadratinhos-outline-paint": ["line-color", "line-width", "line-opacity"],
+  "grid-paint": ["line-color", "line-width", "line-opacity"],
+  "gridinho-paint": ["line-color", "line-width", "line-opacity"]
 };
 
 const defaultStyles = {
