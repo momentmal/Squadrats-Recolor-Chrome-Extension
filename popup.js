@@ -14,64 +14,19 @@ const editableStyles = {
 };
 
 const defaultStyles = {
-  "squadrats-paint": {
-    "fill-opacity": "0.2",
-    "fill-color": "#aaaaaa"
-  },
-  "squadratinhos-paint": {
-    "fill-opacity": "0.5",
-    "fill-color": "#999999"
-  },
-  "squadyard-paint": {
-    "opacity": "0",
-    "fill-opacity": "0",
-    "fill-color": "#ffffff"
-  },
-  "squadyardinho-paint": {
-    "opacity": "0",
-    "fill-opacity": "0",
-    "fill-color": "#ffbe7c"
-  },
-  "ubersquadrat-paint": {
-    "line-width": "2",
-    "line-color": "#ff5500"
-  },
-  "ubersquadratinho-paint": {
-    "line-width": "1",
-    "line-color": "#7a4700"
-  },
-  "new-squadrats-paint": {
-    "opacity": "0",
-    "fill-opacity": "0.5",
-    "fill-color": "#4cf095"
-  },
-  "new-squadratinhos-paint": {
-    "opacity": "0",
-    "fill-opacity": "0.5",
-    "fill-color": "#00fcca"
-  },
-  "squadrats-outline-paint": {
-    "line-width": "1",
-    "line-color": "#000000"
-  },
-  "squadratinhos-outline-paint": {
-    "line-width": "0.5",
-    "line-color": "#000000",
-    "line-opacity": "0"
-  },
-  "grid-paint": {
-    "line-opacity": "0.8",
-    "line-color": "#bbbbbb",
-    "line-width": "1.2"
-  },
-  "gridinho-paint": {
-    "line-opacity": "0.8",
-    "line-color": "#bbbbbb",
-    "line-width": "0.7"
-  }
+  "squadrats-paint": { "fill-opacity": "0.2", "fill-color": "#aaaaaa" },
+  "squadratinhos-paint": { "fill-opacity": "0.5", "fill-color": "#999999" },
+  "squadyard-paint": { "opacity": "0", "fill-opacity": "0", "fill-color": "#ffffff" },
+  "squadyardinho-paint": { "opacity": "0", "fill-opacity": "0", "fill-color": "#ffbe7c" },
+  "ubersquadrat-paint": { "line-width": "2", "line-color": "#ff5500" },
+  "ubersquadratinho-paint": { "line-width": "1", "line-color": "#7a4700" },
+  "new-squadrats-paint": { "opacity": "0", "fill-opacity": "0.5", "fill-color": "#4cf095" },
+  "new-squadratinhos-paint": { "opacity": "0", "fill-opacity": "0.5", "fill-color": "#00fcca" },
+  "squadrats-outline-paint": { "line-width": "1", "line-color": "#000000" },
+  "squadratinhos-outline-paint": { "line-width": "0.5", "line-color": "#000000", "line-opacity": "0" },
+  "grid-paint": { "line-opacity": "0.8", "line-color": "#bbbbbb", "line-width": "1.2" },
+  "gridinho-paint": { "line-opacity": "0.8", "line-color": "#bbbbbb", "line-width": "0.7" }
 };
-
-
 
 const isColorKey = (k) => k.includes("color");
 const isOpacityKey = (k) => k.includes("opacity");
@@ -86,9 +41,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     func: () => {
       try {
         return {
-          defaults: window.squadratsStyles?.["leaflet-styling"] || {},
-          overrides: JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}")["leaflet-styling"] || {},
-          enabled: localStorage.getItem("enableSquadratsOverrides") === "true"
+          defaults: window.squadratsStyles || {},
+          overrides: JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}"),
+          enabled: localStorage.getItem("enableSquadratsOverrides") === "true",
+          enabledTypes: JSON.parse(localStorage.getItem("enabledSquadratsTypes") || "[]")
         };
       } catch (e) {
         return { defaults: {}, overrides: {}, enabled: false, error: e.toString() };
@@ -100,84 +56,86 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    const { defaults, overrides, enabled } = result.result;
-
-    console.log("🎨 GUI initialized with:");
-    console.log("defaults:", defaults);
-    console.log("overrides:", overrides);
-    console.log("enabled:", enabled);
-  
+    const { defaults, overrides, enabled, enabledTypes } = result.result;
     document.getElementById("enableOverride").checked = enabled;
-  
+
+    // reflect enabledTypes
+    document.getElementById("enableLeaflet").checked = enabledTypes.includes("leaflet-styling");
+    document.getElementById("enableMapboxVector").checked = enabledTypes.includes("mapbox-vector-styling");
+    document.getElementById("enableMapboxRaster").checked = enabledTypes.includes("mapbox-raster-styling");
+    document.getElementById("enableMapboxSatellite").checked = enabledTypes.includes("mapbox-satellite-styling");
+
+    // pick one active group as source of truth for GUI
+    const activeType = enabledTypes[0] || "leaflet-styling";
+    const defaultsForGUI = defaults[activeType] || {};
+    const overridesForGUI = overrides[activeType] || {};
+
+    // build GUI
     for (const key in editableStyles) {
       const group = document.createElement("div");
       group.className = "group";
-  
+
       const title = document.createElement("h4");
       title.textContent = key;
       group.appendChild(title);
-  
+
       editableStyles[key].forEach((prop) => {
-        const overrideVal = overrides?.[key]?.[prop];
+        const overrideVal = overridesForGUI?.[key]?.[prop];
         const defaultVal = defaultStyles?.[key]?.[prop];
         const value = overrideVal ?? defaultVal;
-  
+
         const entry = document.createElement("div");
         entry.className = "entry";
-  
+
         const label = document.createElement("label");
         label.textContent = prop;
         entry.appendChild(label);
-  
+
         const input = document.createElement("input");
         const valueLabel = document.createElement("span");
         valueLabel.className = "value-label";
-  
+
         if (isColorKey(prop)) {
           input.type = "color";
           input.value = typeof value === "string" ? value : "#000000";
         } else if (isOpacityKey(prop)) {
           input.type = "range";
-          input.min = 0;
-          input.max = 1;
-          input.step = 0.01;
+          input.min = 0; input.max = 1; input.step = 0.01;
           input.value = parseFloat(value) || 0;
           valueLabel.textContent = input.value;
         } else if (isWidthKey(prop)) {
           input.type = "range";
-          input.min = 0;
-          input.max = 10;
-          input.step = 0.1;
+          input.min = 0; input.max = 10; input.step = 0.1;
           input.value = parseFloat(value) || 0;
           valueLabel.textContent = input.value;
         }
-  
+
         input.oninput = () => {
-          if (!overrides[key]) overrides[key] = {};
+          if (!overridesForGUI[key]) overridesForGUI[key] = {};
           const val = input.type === "color" ? input.value : parseFloat(input.value);
-          overrides[key][prop] = val;
+          overridesForGUI[key][prop] = val;
           valueLabel.textContent = val;
-  
+
+          // apply into ALL enabled style groups
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
-            func: (o) => {
+            func: (o, enabledTypes) => {
               const full = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
-              full["leaflet-styling"] = o;
+              enabledTypes.forEach(type => { full[type] = o; });
               localStorage.setItem("customSquadratsStyles", JSON.stringify(full));
             },
-            args: [overrides]
+            args: [overridesForGUI, enabledTypes]
           });
         };
-  
+
         entry.appendChild(input);
         if (!isColorKey(prop)) entry.appendChild(valueLabel);
         group.appendChild(entry);
       });
-  
+
       editor.appendChild(group);
     }
   });
-  
 
   document.getElementById("enableOverride").onchange = (e) => {
     const enabled = e.target.checked;
@@ -187,7 +145,34 @@ document.addEventListener("DOMContentLoaded", async () => {
       args: [enabled]
     });
   };
+});
 
+const typeMap = {
+  enableLeaflet: "leaflet-styling",
+  enableMapboxVector: "mapbox-vector-styling",
+  enableMapboxRaster: "mapbox-raster-styling",
+  enableMapboxSatellite: "mapbox-satellite-styling"
+};
+
+Object.keys(typeMap).forEach(id => {
+  const el = document.getElementById(id);
+  el.onchange = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: (storageKey, checked) => {
+          const list = JSON.parse(localStorage.getItem("enabledSquadratsTypes") || "[]");
+          if (checked && !list.includes(storageKey)) list.push(storageKey);
+          if (!checked) {
+            const i = list.indexOf(storageKey);
+            if (i > -1) list.splice(i,1);
+          }
+          localStorage.setItem("enabledSquadratsTypes", JSON.stringify(list));
+        },
+        args: [typeMap[id], el.checked]
+      });
+    });
+  };
 });
 
 document.getElementById("resetColors").onclick = () => {
@@ -197,7 +182,8 @@ document.getElementById("resetColors").onclick = () => {
         target: { tabId: tab.id },
         func: () => {
           const full = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
-          delete full["leaflet-styling"];
+          const types = JSON.parse(localStorage.getItem("enabledSquadratsTypes") || "[]");
+          types.forEach(t => delete full[t]);
           localStorage.setItem("customSquadratsStyles", JSON.stringify(full));
           alert("🎨 Custom coloring cleared. Please reload the page.");
         }
@@ -206,7 +192,7 @@ document.getElementById("resetColors").onclick = () => {
   }
 };
 
-// Export button: downloads localStorage["customSquadratsStyles"] as JSON
+// Export / Import unchanged
 document.getElementById("export").onclick = () => {
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
     chrome.scripting.executeScript({
@@ -224,7 +210,6 @@ document.getElementById("export").onclick = () => {
   });
 };
 
-// Import button: loads JSON into localStorage["customSquadratsStyles"]
 document.getElementById("import").onclick = () => {
   document.getElementById("fileInput").click();
 };
@@ -232,7 +217,6 @@ document.getElementById("import").onclick = () => {
 document.getElementById("fileInput").onchange = (e) => {
   const file = e.target.files?.[0];
   if (!file) return;
-
   const reader = new FileReader();
   reader.onload = (event) => {
     try {
@@ -253,4 +237,3 @@ document.getElementById("fileInput").onchange = (e) => {
   };
   reader.readAsText(file);
 };
-

@@ -35,6 +35,7 @@ Not intented to harm anyone, just a quick workaround to add custom coloring to t
 - I added this code to the end of the squadratsStyles.js in the copy of the original Squadrats.com Extension:
 
 <pre>
+
 function mergeDeep(target, source) {
     for (const key in source) {
       if (source[key] instanceof Object && key in target) {
@@ -49,12 +50,55 @@ function mergeDeep(target, source) {
     const enable = localStorage.getItem("enableSquadratsOverrides") === "true";
     if (enable) {
       const overrides = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
-      if (overrides["leaflet-styling"]) {
-        mergeDeep(squadratsStyles["leaflet-styling"], overrides["leaflet-styling"]);
-        console.log("✅ Applied leaflet-styling overrides from localStorage");
-      }
+      const enabledTypes = JSON.parse(localStorage.getItem("enabledSquadratsTypes") || "[]");
+  
+      enabledTypes.forEach(type => {
+          if (overrides[type] && squadratsStyles[type]) {
+              const fixed = {};
+              for (const layer in overrides[type]) {
+              fixed[layer] = {};
+              for (const prop in overrides[type][layer]) {
+                  let val = overrides[type][layer][prop];
+  
+                  if (prop === "fill-opacity" || prop === "line-opacity") {
+                  if (type.startsWith("mapbox-")) {
+                      // ✅ Handle specific opacity properties for Mapbox
+                      const originalValue = squadratsStyles[type][layer]?.[prop];
+                      const opacityValue = parseFloat(val);
+                      
+                      if (typeof originalValue === 'string' && originalValue.includes('interpolate')) {
+                          // String format: "['interpolate',['linear'],['zoom'],11,1,14,0.2]"
+                          fixed[layer][prop] = `['interpolate',['linear'],['zoom'],0,${opacityValue},22,${opacityValue}]`;
+                      } else {
+                          // Simple string format: "0.2"
+                          fixed[layer][prop] = opacityValue.toString();
+                      }
+                  } else {
+                      // ✅ Apply opacity overrides for Leaflet
+                      fixed[layer][prop] = parseFloat(val);
+                  }
+                  } else if (prop === "fill-color" || prop === "line-color") {
+                  // ✅ Always apply custom color
+                  val = String(val);
+                  fixed[layer][prop] = val;
+                  } else if (prop === "line-width") {
+                  // ✅ Handle line width
+                  fixed[layer][prop] = parseFloat(val);
+                  } else if (prop === "opacity") {
+                  // ✅ Handle generic opacity (for Leaflet compatibility)
+                  if (!type.startsWith("mapbox-")) {
+                      fixed[layer][prop] = parseFloat(val);
+                  }
+                  }
+              }
+              }
+              mergeDeep(squadratsStyles[type], fixed);
+              console.log("🎨 Applied overrides for", type);
+          }
+          });
+  
     } else {
-      console.log("ℹ️ Squadrats overrides disabled via toggle");
+      console.log("🎨 Squadrats overrides disabled via toggle");
     }
   } catch (e) {
     console.warn("⚠️ Failed to apply style overrides:", e);
