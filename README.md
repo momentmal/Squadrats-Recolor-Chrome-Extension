@@ -99,7 +99,7 @@ function mergeDeep(target, source) {
   window.squadratsStyles = squadratsStyles;
 </pre>
 
-- Then I imported my unpacked extension, so the Extension does not self update and sits in a known location (in Chrome via "Manage Extensions" (Developer Mode) - Import Unpacked)
+- Then I imported the copied original Squadrats extension, so the Extension does not self update and sits in a known location (in Chrome via "Manage Extensions" (Developer Mode) - Import Unpacked)
 - Ensure your copied version of the Squadrats Extension still works for you
 - Download the recolor extension provided in this repository (via [Releases](https://github.com/momentmal/Squadrats-Recolor-Chrome-Extension/releases))
 - Put it in a folder and use the same "Import Unpacked" method in Chrome
