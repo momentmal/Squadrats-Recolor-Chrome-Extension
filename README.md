@@ -22,8 +22,7 @@ Now also supporting Komoot (Mapbox Vector Style).
 
 - For this extension to work, we need to hook some code to the end of squadratsStyles.js in the original Squadrats Extension:
 - <details><summary>>>(CLICK TO EXPAND FOR CODE)<<</summary>
-  <pre>
-  
+  <pre>  
   function mergeDeep(target, source) {
       for (const key in source) {
         if (source[key] instanceof Object && key in target) {
@@ -38,22 +37,19 @@ Now also supporting Komoot (Mapbox Vector Style).
       const enable = localStorage.getItem("enableSquadratsOverrides") === "true";
       if (enable) {
         const overrides = JSON.parse(localStorage.getItem("customSquadratsStyles") || "{}");
-        const enabledTypes = JSON.parse(localStorage.getItem("enabledSquadratsTypes") || "[]");
-    
+        const enabledTypes = JSON.parse(localStorage.getItem("enabledSquadratsTypes") || "[]");    
         enabledTypes.forEach(type => {
             if (overrides[type] && squadratsStyles[type]) {
                 const fixed = {};
                 for (const layer in overrides[type]) {
                 fixed[layer] = {};
                 for (const prop in overrides[type][layer]) {
-                    let val = overrides[type][layer][prop];
-    
+                    let val = overrides[type][layer][prop];    
                     if (prop === "fill-opacity" || prop === "line-opacity") {
                     if (type.startsWith("mapbox-")) {
                         // ✅ Handle specific opacity properties for Mapbox
                         const originalValue = squadratsStyles[type][layer]?.[prop];
-                        const opacityValue = parseFloat(val);
-                        
+                        const opacityValue = parseFloat(val);                        
                         if (typeof originalValue === 'string' && originalValue.includes('interpolate')) {
                             // String format: "['interpolate',['linear'],['zoom'],11,1,14,0.2]"
                             fixed[layer][prop] = `['interpolate',['linear'],['zoom'],0,${opacityValue},22,${opacityValue}]`;
@@ -83,8 +79,7 @@ Now also supporting Komoot (Mapbox Vector Style).
                 mergeDeep(squadratsStyles[type], fixed);
                 console.log("🎨 Applied overrides for", type);
             }
-            });
-    
+            });    
       } else {
         console.log("🎨 Squadrats overrides disabled via toggle");
       }
