@@ -92,7 +92,7 @@ Now also supporting Komoot (Mapbox Vector Style).
   </details>
 
 - Only with this hook, the GUI will actually have effect on the coloring.
-- For a minimal setup, you then can go ahead and Download the recolor extension provided in this repository (via [Releases](https://github.com/momentmal/Squadrats-Recolor-Chrome-Extension/releases)
+- For a minimal setup, you then can go ahead and Download the recolor extension provided in this repository (via [Releases](https://github.com/momentmal/Squadrats-Recolor-Chrome-Extension/releases))
 - Unzip it and put it in a folder
 - Then import it (in Chrome via "Manage Extensions" (Developer Mode) - Import Unpacked)
 
