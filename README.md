@@ -98,7 +98,7 @@ Now also supporting Komoot (Mapbox Vector Style).
 
 ## Installation - Optional path (how I set it up)
 
-To avoid a self-updating Squadrats Extension, first I copied the original Squadrats.com Extension Files into a custom folder and removed the key in the manifest.json (so it is not confused with the original Extension), deactivated the original extension temporarily for my experiment
+- To avoid a self-updating Squadrats Extension, first I copied the original Squadrats.com Extension Files into a custom folder and removed the key in the manifest.json (so it is not confused with the original Extension), deactivated the original extension temporarily for my experiment
 - ![image](https://github.com/user-attachments/assets/4462b532-613a-423b-af3e-df74564a2b59)
 - Reasoning behind this: The normal installed version can change its path by itself, and Chrome uses some very obscure folder names / paths for maintaining the extensions installed via the chrome web store
 - Downside: To update the Squadrats.com extension, you have to occasionally deactivate the manual copy, reactivate the chrome web store version, and transfer the files after the extension has updated. There might be a more elegant way to let the 2 extensions work together.
